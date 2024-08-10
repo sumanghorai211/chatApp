@@ -10,7 +10,10 @@ const { app, server } = require("./socket/index");
 // const app = express()
 app.use(
   cors({
-    origin: "https://endearing-gumdrop-ad1ace.netlify.app",
+    origin: [
+      "https://endearing-gumdrop-ad1ace.netlify.app",
+      "http://localhost:3000",
+    ],
     credentials: true,
   })
 );
