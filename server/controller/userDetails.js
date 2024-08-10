@@ -2,11 +2,13 @@ const getUserDetailsFromToken = require("../helpers/getUserDetailsFromToken");
 
 async function userDetails(request, response) {
   try {
-    const tokenx = " ";
-    if (request.body.token) {
-      tokenx = request.body.token;
+    const token = request.cookies.token || " ";
+    if (
+      request.headers.authorization &&
+      request.headers.authorization.startsWith("Bearer ")
+    ) {
+      token = request.headers.authorization.split(" ")[1];
     }
-    const token = request.cookies.token || tokenx;
 
     const user = await getUserDetailsFromToken(token);
 
