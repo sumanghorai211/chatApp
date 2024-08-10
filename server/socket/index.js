@@ -15,7 +15,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://endearing-gumdrop-ad1ace.netlify.app",
+    origin: [
+      "https://endearing-gumdrop-ad1ace.netlify.app",
+      "http://localhost:3000",
+    ],
     credentials: true,
   },
 });
