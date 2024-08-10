@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://chatapp-197k.onrender.com",
+    origin: "https://endearing-gumdrop-ad1ace.netlify.app",
     credentials: true,
   },
 });
