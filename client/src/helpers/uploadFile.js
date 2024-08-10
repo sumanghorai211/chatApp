@@ -1,6 +1,6 @@
 const url = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/auto/upload`;
 console.log(url);
-console.log(process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+// console.log(process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
 const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
