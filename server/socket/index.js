@@ -15,7 +15,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: [
+      "https://magenta-sunflower-b293bc.netlify.app",
+      "http://localhost:3000",
+    ],
     credentials: true,
   },
 });

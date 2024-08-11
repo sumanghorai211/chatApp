@@ -13,6 +13,7 @@ app.use(
     origin: [
       "https://endearing-gumdrop-ad1ace.netlify.app",
       "http://localhost:3000",
+      "https://magenta-sunflower-b293bc.netlify.app/",
     ],
     credentials: true,
   })
