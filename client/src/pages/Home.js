@@ -1,8 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { logout, setOnlineUser, setUser } from "../redux/userSlice";
+import {
+  logout,
+  setOnlineUser,
+  setSocketConnection,
+  setUser,
+} from "../redux/userSlice";
 import Sidebar from "../components/Sidebar";
 import logo from "../assets/logo.png";
 import io from "socket.io-client";
@@ -12,8 +17,8 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [socketConnection, setSocketConnection] = useState(null);
 
+  console.log("user", user);
   const fetchUserDetails = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -34,49 +39,35 @@ const Home = () => {
         dispatch(logout());
         navigate("/email");
       }
-      console.log("Current user Details:", response.data.data);
+      console.log("current user Details", response);
     } catch (error) {
-      console.error("Failed to fetch user details:", error);
+      console.log("error", error);
     }
   };
 
   useEffect(() => {
     fetchUserDetails();
-  }, [dispatch, navigate]);
+  }, []);
 
+  /***socket connection */
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_BACKEND_URL, {
+    const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
       auth: {
         token: localStorage.getItem("token"),
       },
-      transports: ["websocket", "polling"], // Allow fallback to polling
-      reconnectionAttempts: 5, // Number of reconnection attempts
-      timeout: 10000, // Connection timeout (10 seconds)
     });
 
-    socket.on("connect_error", (error) => {
-      console.error("WebSocket connection error:", error);
-    });
-
-    socket.on("connect", () => {
-      console.log("WebSocket connected:", socket.id);
-    });
-
-    socket.on("disconnect", () => {
-      console.warn("Socket disconnected. Attempting to reconnect...");
-    });
-
-    socket.on("onlineUser", (data) => {
-      console.log("Online users:", data);
+    socketConnection.on("onlineUser", (data) => {
+      console.log(data);
       dispatch(setOnlineUser(data));
     });
 
-    setSocketConnection(socket);
+    dispatch(setSocketConnection(socketConnection));
 
     return () => {
-      socket.disconnect();
+      socketConnection.disconnect();
     };
-  }, [dispatch]);
+  }, []);
 
   const basePath = location.pathname === "/";
   return (
@@ -85,6 +76,7 @@ const Home = () => {
         <Sidebar />
       </section>
 
+      {/**message component**/}
       <section className={`${basePath && "hidden"}`}>
         <Outlet />
       </section>
@@ -98,7 +90,7 @@ const Home = () => {
           <img src={logo} width={250} alt="logo" />
         </div>
         <p className="text-lg mt-2 text-slate-500">
-          Select user to send a message
+          Select user to send message
         </p>
       </div>
     </div>
