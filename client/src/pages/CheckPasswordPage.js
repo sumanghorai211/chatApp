@@ -10,6 +10,12 @@ import { useDispatch } from "react-redux";
 import { setToken, setUser } from "../redux/userSlice";
 import backgroundImage from "../assets/background.jpg";
 const CheckPasswordPage = () => {
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
   const [data, setData] = useState({
     password: "",
     userId: "",

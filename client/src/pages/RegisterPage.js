@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../helpers/uploadFile";
@@ -7,6 +7,12 @@ import toast from "react-hot-toast";
 import backgroundImage from "../assets/background.jpg"; // Update the path
 
 const RegisterPage = () => {
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
   const [data, setData] = useState({
     name: "",
     email: "",
