@@ -34,7 +34,7 @@ const Home = () => {
         dispatch(logout());
         navigate("/email");
       }
-      console.log("current user Details", response);
+      console.log("Current user Details:", response.data.data);
     } catch (error) {
       console.error("Failed to fetch user details:", error);
     }
@@ -49,15 +49,25 @@ const Home = () => {
       auth: {
         token: localStorage.getItem("token"),
       },
-      transports: ["websocket"],
+      transports: ["websocket", "polling"], // Allow fallback to polling
+      reconnectionAttempts: 5, // Number of reconnection attempts
+      timeout: 10000, // Connection timeout (10 seconds)
     });
 
     socket.on("connect_error", (error) => {
       console.error("WebSocket connection error:", error);
     });
 
+    socket.on("connect", () => {
+      console.log("WebSocket connected:", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      console.warn("Socket disconnected. Attempting to reconnect...");
+    });
+
     socket.on("onlineUser", (data) => {
-      console.log(data);
+      console.log("Online users:", data);
       dispatch(setOnlineUser(data));
     });
 
@@ -88,7 +98,7 @@ const Home = () => {
           <img src={logo} width={250} alt="logo" />
         </div>
         <p className="text-lg mt-2 text-slate-500">
-          Select user to send message
+          Select user to send a message
         </p>
       </div>
     </div>
